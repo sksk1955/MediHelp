@@ -10,7 +10,7 @@ const port = process.env.PORT || 4000
 // Middleware
 app.use(express.json())
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "https://your-medihelp-frontend.onrender.com",
+  origin: "http://localhost:8080",
   methods: ['GET', 'POST'],
   credentials: true
 }))
@@ -19,7 +19,7 @@ app.use(cors({
 app.options('*', cors())
 
 // API endpoints
-app.use('/api', chatRouter)
+app.use('/api', chatRouter);
 
 // Health check route
 app.get('/', (req, res) => {

@@ -39,19 +39,17 @@ const Navbar = () => {
     <header
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300 backdrop-blur-sm",
-        isScrolled
-          ? "bg-white/90 shadow-soft py-2"
-          : "bg-transparent py-4"
+        isScrolled ? "bg-white/90 shadow-soft py-2" : "bg-transparent py-4"
       )}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <a href="/" className="flex items-center">
-              <span className="text-medical-dark font-bold text-2xl">
-                Medi
+              <span className="text-mindwell font-bold text-2xl">
+                Mind
               </span>
-              <span className="text-medical font-medium">Help</span>
+              <span className="text-mindwell font-medium">Bridge</span>
             </a>
           </div>
 

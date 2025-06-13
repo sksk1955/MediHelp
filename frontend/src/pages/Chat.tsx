@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import Footer from '@/components/layout/Footer'
 import { Button } from '@/components/ui/button'
-import { Send, ArrowLeft } from 'lucide-react'
+import { Send, ArrowLeft, Brain } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
@@ -67,7 +67,6 @@ const Chat = () => {
     const userMessage = inputValue.trim()
     setInputValue('')
     
-    // Add user message with timestamp
     const newUserMessage: Message = {
       role: 'user',
       content: userMessage,
@@ -81,10 +80,13 @@ const Chat = () => {
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/chat`, {
         message: userMessage,
         sessionId: sessionId
-      })
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
 
       if (response.data.success) {
-        // Add assistant message with timestamp
         const newAssistantMessage: Message = {
           role: 'assistant',
           content: response.data.data,
@@ -105,23 +107,14 @@ const Chat = () => {
     }
   }
 
-  const clearChat = () => {
-    setMessages([])
-    localStorage.removeItem('chatHistory')
-    // Generate new session ID
-    const newSessionId = Math.random().toString(36).substring(2, 15)
-    setSessionId(newSessionId)
-    localStorage.setItem('chatSessionId', newSessionId)
-  }
-
   const exampleQuestions = [
-    "What are common symptoms of the flu?",
-    "How can I maintain a healthy blood pressure?",
-    "What are the benefits of regular exercise?",
-    "How can I improve my sleep quality?",
-    "What are common signs of vitamin D deficiency?",
-    "How can I manage stress effectively?"
-  ]
+    "How can I manage anxiety?",
+    "What are some stress relief techniques?",
+    "Tips for better sleep and mental health?",
+    "How can I improve my mood?",
+    "Ways to practice self-care?",
+    "Dealing with work-related stress?"
+  ];
 
   const handleBackClick = () => {
     navigate('/');
@@ -142,12 +135,15 @@ const Chat = () => {
                 >
                   <ArrowLeft className="h-5 w-5" />
                 </Button>
-                <h1 className="text-2xl sm:text-3xl font-bold">Chat with MediHelp</h1>
+                <h1 className="text-2xl sm:text-3xl font-bold">Chat with MindBridge</h1>
               </div>
               
               {messages.length > 0 && (
                 <Button
-                  onClick={clearChat}
+                  onClick={() => {
+                    setMessages([])
+                    localStorage.removeItem('chatHistory')
+                  }}
                   variant="outline"
                   size="sm"
                   className="text-sm"
@@ -158,26 +154,24 @@ const Chat = () => {
             </div>
 
             <div className="bg-gray-50 rounded-2xl shadow-lg">
-              {/* Chat Messages Container */}
               <div className="h-[calc(100vh-250px)] sm:h-[600px] overflow-y-auto p-4">
                 <div className="messages-container flex-grow overflow-y-auto space-y-3 sm:space-y-4 px-2">
                   {messages.length === 0 ? (
                     <div className="flex-grow flex flex-col justify-center items-center text-center px-2 sm:px-4">
-                      <div className="w-12 h-12 sm:w-16 sm:h-16 bg-medical-light/30 rounded-full flex items-center justify-center mb-3 sm:mb-4">
-                        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-medical text-white rounded-full flex items-center justify-center animate-pulse-gentle">
-                          <span className="font-bold text-sm sm:text-base">AI</span>
-                        </div>
+                      <div className="w-12 h-12 sm:w-16 sm:h-16 bg-mindwell-light rounded-full flex items-center justify-center mb-3 sm:mb-4">
+                        <Brain className="w-8 h-8 sm:w-10 sm:h-10 text-mindwell" />
                       </div>
-                      <h3 className="text-lg sm:text-xl font-semibold mb-2">Women's Health Assistant</h3>
+                      <h3 className="text-lg sm:text-xl font-semibold mb-2">Your Mental Wellbeing Companion</h3>
                       <p className="text-gray-600 text-sm sm:text-base mb-4">
-                        Ask me anything about health conditions, symptoms, or general medical advice.
+                        Share your thoughts and feelings in a safe, judgment-free space. 
+                        I'm here to listen and provide supportive guidance.
                       </p>
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 w-full">
                         {exampleQuestions.map((question, index) => (
                           <button
                             key={index}
                             onClick={() => setInputValue(question)}
-                            className="text-left text-xs sm:text-sm bg-white border border-gray-200 rounded-lg p-2 hover:border-medical transition-colors"
+                            className="text-left text-xs sm:text-sm bg-white border border-gray-200 rounded-lg p-2 hover:border-mindwell transition-colors"
                           >
                             {question}
                           </button>
@@ -193,7 +187,7 @@ const Chat = () => {
                         <div
                           className={`max-w-[85%] sm:max-w-[80%] rounded-2xl p-3 sm:p-4 text-sm sm:text-base ${
                             message.role === 'user'
-                              ? 'bg-medical text-white'
+                              ? 'bg-mindwell text-white'
                               : 'bg-gray-100 text-gray-800'
                           }`}
                         >
@@ -239,20 +233,24 @@ const Chat = () => {
                       </div>
                     </div>
                   )}
+                  <div ref={messagesEndRef} />
                 </div>
               </div>
 
-              {/* Input Form */}
               <div className="border-t bg-white p-4 rounded-b-2xl">
                 <form onSubmit={handleSubmit} className="flex gap-2">
                   <input
                     type="text"
                     value={inputValue}
-                    onChange={handleInputChange}
-                    placeholder="Type your question..."
-                    className="flex-grow px-4 py-2 rounded-full border focus:ring-2 focus:ring-medical/50"
+                    onChange={(e) => setInputValue(e.target.value)}
+                    placeholder="Share your thoughts or ask for support..."
+                    className="flex-grow px-4 py-2 rounded-full border focus:ring-2 focus:ring-mindwell/50"
                   />
-                  <Button type="submit" className="rounded-full aspect-square p-2">
+                  <Button 
+                    type="submit" 
+                    className="rounded-full aspect-square p-2 bg-mindwell hover:bg-mindwell/90"
+                    disabled={isLoading}
+                  >
                     <Send className="h-5 w-5" />
                   </Button>
                 </form>

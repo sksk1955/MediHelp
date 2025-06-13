@@ -1,26 +1,25 @@
-
 import React from "react";
 import { MessageSquare, Lightbulb, CheckCircle } from "lucide-react";
 
 const HowItWorksSection = () => {
   const steps = [
     {
-      icon: <MessageSquare className="w-12 h-12 text-medical" />,
-      title: "Ask a question",
+      icon: <MessageSquare className="w-12 h-12 text-mindwell" />,
+      title: "Share Your Thoughts",
       description:
-        "Type your concerned health related questions in a clear, conversational way.",
+        "Express your feelings and concerns in a safe, judgment-free space.",
     },
     {
-      icon: <Lightbulb className="w-12 h-12 text-medical" />,
-      title: "Get accurate medical insights",
+      icon: <Lightbulb className="w-12 h-12 text-mindwell" />,
+      title: "Get Supportive Guidance",
       description:
-        "Receive evidence-based information drawn from trusted medical sources.",
+        "Receive evidence-based insights and coping strategies for better mental wellbeing.",
     },
     {
-      icon: <CheckCircle className="w-12 h-12 text-medical" />,
-      title: "Learn or act with confidence",
+      icon: <CheckCircle className="w-12 h-12 text-mindwell" />,
+      title: "Take Steps Forward",
       description:
-        "Use the information to better understand your health or discuss with your doctor.",
+        "Learn practical techniques and build emotional resilience for your journey.",
     },
   ];
 

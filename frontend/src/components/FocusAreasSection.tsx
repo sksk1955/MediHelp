@@ -1,5 +1,5 @@
 import React from "react";
-import { Baby, Heart, Calendar, Hospital, Stethoscope, User, Activity, Clipboard } from "lucide-react";
+import { Brain, Heart, Smile, Shield, Coffee, UserCircle, Sparkles, MessagesSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface FocusAreaCardProps {
@@ -19,8 +19,8 @@ const FocusAreaCard = ({ icon: Icon, title, description, className, animationDel
       )}
       style={{ animationDelay }} // Use the animationDelay property here
     >
-      <div className="w-16 h-16 rounded-full bg-medical-light flex items-center justify-center mb-4">
-        <Icon className="text-medical w-8 h-8" />
+      <div className="w-16 h-16 rounded-full bg-mindwell-light flex items-center justify-center mb-4">
+        <Icon className="text-mindwell w-8 h-8" />
       </div>
       <h3 className="text-xl font-semibold mb-2">{title}</h3>
       <p className="text-gray-600">{description}</p>
@@ -31,43 +31,43 @@ const FocusAreaCard = ({ icon: Icon, title, description, className, animationDel
 const FocusAreasSection = () => {
   const focusAreas = [
     {
-      icon: Heart,
-      title: "General Health",
-      description: "Information about common health conditions, symptoms, and preventive care.",
-    },
-    {
-      icon: Stethoscope, 
-      title: "Medical Conditions",
-      description: "Understanding various diseases, chronic conditions, and their management.",
-    },
-    {
-      icon: Hospital,
-      title: "Treatment Options",
-      description: "Learn about different treatment approaches, medications, and procedures.",
-    },
-    {
-      icon: Activity,
-      title: "Lifestyle & Prevention",
-      description: "Guidance on healthy living, exercise, nutrition, and preventive care.",
-    },
-    {
-      icon: Clipboard,
-      title: "Medical Tests",
-      description: "Information about common medical tests, procedures, and what they mean.",
+      icon: Brain,
+      title: "Mental Health Support",
+      description: "Understanding and managing anxiety, depression, stress, and other mental health concerns.",
     },
     {
       icon: Heart,
-      title: "Mental Health",
-      description: "Support and information about mental health conditions and wellness.",
+      title: "Emotional Wellbeing",
+      description: "Building emotional resilience, self-awareness, and healthy coping mechanisms.",
+    },
+    {
+      icon: Smile,
+      title: "Self-Care Practices",
+      description: "Developing daily routines and habits that promote mental wellness and balance.",
+    },
+    {
+      icon: Shield,
+      title: "Stress Management",
+      description: "Techniques and strategies to handle stress, overwhelm, and life's challenges.",
+    },
+    {
+      icon: Coffee,
+      title: "Lifestyle Balance",
+      description: "Creating harmony between work, relationships, and personal well-being.",
+    },
+    {
+      icon: MessagesSquare,
+      title: "Communication Skills",
+      description: "Improving relationships and expressing emotions in healthy ways.",
     },
   ];
 
   return (
     <section className="py-16 bg-gray-50">
       <div className="section-container">
-        <h2 className="section-title">Focus Areas</h2>
+        <h2 className="section-title">Areas of Support</h2>
         <p className="section-subtitle">
-          Our AI assistant provides reliable information across all aspects of your health
+          Our AI companion provides guidance across various aspects of mental wellbeing
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

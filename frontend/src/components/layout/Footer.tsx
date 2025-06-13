@@ -8,12 +8,12 @@ const Footer = () => {
           {/* Brand Section */}
           <div className="md:col-span-1">
             <h3 className="font-bold text-xl mb-4 flex items-center">
-              <span className="text-medical">Medi</span>
-              <span className="text-white">Help</span>
+              <span className="text-mindwell">Mind</span>
+              <span className="text-white">Bridge</span>
             </h3>
             <p className="text-gray-300 mb-4">
-              Your trusted AI healthcare assistant, providing accurate
-              medical information when you need it most.
+              Your trusted AI mental health companion, providing supportive guidance
+              for your emotional wellbeing journey.
             </p>
           </div>
 

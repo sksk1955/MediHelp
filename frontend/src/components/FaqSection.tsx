@@ -9,43 +9,47 @@ import {
 const FaqSection = () => {
   const faqs = [
     {
-      question: "Is this chatbot a real doctor?",
+      question: "Is MindBridge a licensed therapist?",
       answer:
-        "No, our AI assistant is not a doctor or healthcare provider. It's an AI tool designed to provide educational information based on medical literature. It should never replace professional medical advice, diagnosis, or treatment from qualified healthcare providers.",
+        "No, MindBridge is an AI assistant designed to provide emotional support and general mental health information. It is not a substitute for professional therapy or counseling. If you're experiencing serious mental health concerns, please seek help from a licensed mental health professional.",
     },
     {
-      question: "Can it diagnose my condition?",
+      question: "How can MindBridge help me?",
       answer:
-        "No, our AI assistant cannot provide diagnoses. It can help explain medical concepts, conditions, and general health information, but proper diagnosis requires in-person evaluation by a qualified healthcare provider who can review your complete medical history and perform appropriate examinations and tests.",
+        "MindBridge can provide emotional support, share coping strategies, offer relaxation techniques, and provide information about mental health topics. It's here to listen without judgment, help you explore your feelings, and suggest self-care practices for better emotional wellbeing.",
     },
     {
-      question: "Is my data safe?",
+      question: "Is my conversation private?",
       answer:
-        "Yes, we take data privacy seriously. Your conversations are anonymous and we don't store any personally identifiable information. We use industry-standard encryption to protect all data.",
+        "Yes, your privacy is important to us. All conversations are confidential and anonymized. We use industry-standard encryption and don't store any personally identifiable information. You can chat freely knowing your data is protected.",
     },
     {
-      question: "How accurate is the information?",
+      question: "What should I do in a mental health crisis?",
       answer:
-        "Our AI is trained on peer-reviewed medical literature and reputable healthcare sources. However, medical knowledge evolves constantly, and AI may have limitations. We strive for accuracy but always recommend verifying critical information with healthcare professionals.",
+        "If you're experiencing a mental health crisis or having thoughts of self-harm, please reach out to emergency services or contact mental health crisis helplines immediately:\n\n" +
+        "• National Crisis Helpline: 988\n" +
+        "• Crisis Text Line: Text HOME to 741741\n" +
+        "• National Suicide Prevention Lifeline: 1-800-273-8255\n\n" +
+        "MindWell is not equipped to handle crisis situations. Always seek professional help in emergencies.",
     },
     {
-      question: "Can I use this for emergencies?",
+      question: "Can I use this instead of therapy?",
       answer:
-        "No. If you're experiencing a medical emergency, please call emergency services (100 in India) or go to your nearest emergency room immediately. Our AI assistant is not designed to handle emergencies and cannot provide urgent care or advice.",
+        "No, MindWell is not a replacement for professional therapy. While we can provide support and information, we recommend working with licensed mental health professionals for clinical treatment, diagnosis, or ongoing therapy. We can help you understand different therapy options and encourage seeking professional help when needed.",
     },
     {
-      question: "Is this service free?",
+      question: "How accurate is the information provided?",
       answer:
-        "Yes, our basic AI assistant service is free to use. We may offer premium features in the future, but core functionality will remain accessible to all users without charge.",
+        "Our responses are based on well-established mental health resources and evidence-based practices. However, everyone's mental health journey is unique. We encourage you to verify information with mental health professionals and use our suggestions as general guidance rather than specific medical advice.",
     },
   ];
 
   return (
     <section id="faq" className="py-16 bg-white">
       <div className="section-container">
-        <h2 className="section-title">Frequently Asked Questions</h2>
+        <h2 className="section-title">Common Questions</h2>
         <p className="section-subtitle">
-          Find answers to common questions about our AI health assistant
+          Learn more about how MindWell can support your mental health journey
         </p>
 
         <div className="max-w-3xl mx-auto mt-8">

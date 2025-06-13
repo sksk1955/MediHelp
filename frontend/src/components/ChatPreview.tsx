@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Send } from "lucide-react";
+import { Send, Brain } from "lucide-react";
 
 const ChatPreview = () => {
   const [inputValue, setInputValue] = useState("");
@@ -23,38 +23,40 @@ const ChatPreview = () => {
   };
 
   const exampleQuestions = [
-    "What are common symptoms of diabetes?",
-    "How can I improve my sleep quality?",
-    "What are the signs of high blood pressure?"
+    "How can I manage anxiety?",
+    "What are some stress relief techniques?",
+    "How to improve my mood?",
+    "Ways to practice self-care?",
+    "Tips for better sleep and mental health?",
+    "Dealing with work stress?"
   ];
 
   return (
-    <section className="py-16 bg-white">
+    <section className="py-16 bg-gradient-to-b from-white to-mindwell-light/20">
       <div className="section-container">
-        <h2 className="section-title">Experience MediHelp AI</h2>
+        <h2 className="section-title">Try MindBridge AI</h2>
         <p className="section-subtitle">
-          Try our AI health assistant and see how it can help answer your medical questions
+          Experience how our AI companion can support your mental wellbeing journey
         </p>
 
         <div className="max-w-3xl mx-auto card-shadow p-6 rounded-2xl bg-gray-50">
           <div className="bg-white rounded-xl p-4 mb-4 h-72 flex flex-col overflow-y-auto">
             {!chatStarted ? (
               <div className="flex-grow flex flex-col justify-center items-center text-center px-4">
-                <div className="w-16 h-16 bg-medical-light/30 rounded-full flex items-center justify-center mb-4">
-                  <div className="w-10 h-10 bg-medical text-white rounded-full flex items-center justify-center animate-pulse-gentle">
-                    <span className="font-bold">AI</span>
-                  </div>
+                <div className="w-16 h-16 bg-mindwell-light rounded-full flex items-center justify-center mb-4">
+                  <Brain className="w-8 h-8 text-mindwell animate-pulse-gentle" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Your Health Assistant</h3>
+                <h3 className="text-xl font-semibold mb-2">Your Wellbeing Companion</h3>
                 <p className="text-gray-600 mb-4">
-                  Ask me anything about health conditions, symptoms, or medical information.
+                  Share your thoughts and feelings in a safe, judgment-free space. 
+                  I'm here to listen and provide supportive guidance.
                 </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 w-full">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full">
                   {exampleQuestions.map((question, index) => (
                     <button
                       key={index}
                       onClick={() => handleExampleClick(question)}
-                      className="text-left text-sm bg-white border border-gray-200 rounded-lg p-2 hover:border-medical transition-colors"
+                      className="text-left text-sm bg-white border border-gray-200 rounded-lg p-2 hover:border-mindwell transition-colors"
                     >
                       {question}
                     </button>
@@ -64,20 +66,21 @@ const ChatPreview = () => {
             ) : (
               <>
                 <div className="chat-bubble-user mb-4">
-                  What are common symptoms of diabetes?
+                  How can I manage anxiety?
                 </div>
                 <div className="chat-bubble-bot">
-                  <p className="mb-2">Common symptoms of diabetes include:</p>
+                  <p className="mb-2">Here are some effective strategies for managing anxiety:</p>
                   <ul className="list-disc pl-5 space-y-1">
-                    <li>Increased thirst and frequent urination</li>
-                    <li>Extreme hunger or fatigue</li>
-                    <li>Blurred vision</li>
-                    <li>Slow-healing sores</li>
-                    <li>Unexplained weight loss</li>
-                    <li>Numbness in hands/feet</li>
+                    <li>Practice deep breathing exercises</li>
+                    <li>Try progressive muscle relaxation</li>
+                    <li>Maintain a regular exercise routine</li>
+                    <li>Get adequate sleep</li>
+                    <li>Consider mindfulness meditation</li>
                   </ul>
-                  <p className="mt-2">
-                    If you experience these symptoms, consult a healthcare provider for proper diagnosis and treatment. Early detection is crucial for managing diabetes effectively.
+                  <p className="mt-2 text-sm text-gray-600">
+                    Remember, while these techniques can help, it's important to seek 
+                    professional support if anxiety significantly impacts your daily life. 
+                    Would you like to learn more about any of these strategies?
                   </p>
                 </div>
               </>
@@ -89,10 +92,13 @@ const ChatPreview = () => {
               type="text"
               value={inputValue}
               onChange={handleInputChange}
-              placeholder="Type your health question here..."
-              className="flex-grow rounded-full border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-medical/50"
+              placeholder="Share your thoughts or ask for support..."
+              className="flex-grow rounded-full border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-mindwell/50"
             />
-            <Button type="submit" className="btn-primary rounded-full h-12 w-12 flex items-center justify-center p-0">
+            <Button 
+              type="submit" 
+              className="rounded-full h-12 w-12 flex items-center justify-center p-0 bg-mindwell hover:bg-mindwell/90"
+            >
               <Send size={18} />
             </Button>
           </form>

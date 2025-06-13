@@ -35,6 +35,9 @@
     --ring: 217 91% 60%;
 
     --radius: 0.75rem;
+
+    --mindwell: 230 100% 50%; /* Calming blue color */
+    --mindwell-light: 230 100% 95%;
   }
 
   .dark {
@@ -208,4 +211,16 @@
 
 .bg-gradient-light {
   @apply bg-gradient-to-b from-medical-light via-white to-white;
+}
+
+.text-mindwell {
+  @apply text-blue-600;
+}
+
+.bg-mindwell {
+  @apply bg-blue-600;
+}
+
+.border-mindwell {
+  @apply border-blue-600;
 }
