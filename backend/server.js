@@ -11,9 +11,7 @@ const port = process.env.PORT || 4000
 app.use(express.json())
 app.use(cors({
   origin: [
-    'https://your-medihelp-frontend.onrender.com', // Your Render frontend URL
-    'http://localhost:8080', // Local development URL
-  ],
+    'https://your-medihelp-frontend.onrender.com'],
   methods: ['GET', 'POST', 'OPTIONS'],
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization']
