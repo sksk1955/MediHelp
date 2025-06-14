@@ -77,14 +77,19 @@ const Chat = () => {
     setIsLoading(true)
 
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/chat`, {
-        message: userMessage,
-        sessionId: sessionId
-      }, {
-        headers: {
-          'Content-Type': 'application/json'
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/chat`,
+        {
+          message: userMessage,
+          sessionId: sessionId
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          withCredentials: true // Important for CORS
         }
-      });
+      );
 
       if (response.data.success) {
         const newAssistantMessage: Message = {
@@ -95,7 +100,13 @@ const Chat = () => {
         setMessages(prev => [...prev, newAssistantMessage])
       }
     } catch (error) {
-      console.error('Error sending message:', error)
+      console.error('Error details:', {
+        error,
+        apiUrl: import.meta.env.VITE_API_URL,
+        message: error.message,
+        response: error.response
+      });
+      
       const errorMessage: Message = {
         role: 'assistant',
         content: 'Sorry, I encountered an error. Please try again.',

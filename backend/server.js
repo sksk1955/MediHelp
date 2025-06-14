@@ -10,12 +10,16 @@ const port = process.env.PORT || 4000
 // Middleware
 app.use(express.json())
 app.use(cors({
-  origin: "http://localhost:8080",
-  methods: ['GET', 'POST'],
-  credentials: true
+  origin: [
+    'https://your-medihelp-frontend.onrender.com', // Your Render frontend URL
+    'http://localhost:8080', // Local development URL
+  ],
+  methods: ['GET', 'POST', 'OPTIONS'],
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization']
 }))
 
-// Add preflight handler for all routes
+// Preflight handler
 app.options('*', cors())
 
 // API endpoints
