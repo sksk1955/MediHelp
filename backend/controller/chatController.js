@@ -7,123 +7,100 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
 // Store conversation history
 const conversationHistory = new Map()
 
-// Function to find matching response from chatData
-const findResponse = (message) => {
-  const lowercaseMessage = message.toLowerCase()
-  
-  for (const [category, data] of Object.entries(chatData)) {
-    if (data.keywords && data.keywords.some(keyword => 
-      lowercaseMessage.includes(keyword.toLowerCase())
-    )) {
-      return data.response
-    }
-  }
-  
-  return chatData.default.response
-}
-
-// Function to get conversation context
-const getConversationContext = (sessionId) => {
-  return conversationHistory.get(sessionId) || []
-}
-
-// Function to update conversation context
-const updateConversationContext = (sessionId, message, response) => {
-  const history = getConversationContext(sessionId)
-  history.push({ role: 'user', content: message })
-  history.push({ role: 'assistant', content: response })
-  conversationHistory.set(sessionId, history)
-  
-  // Limit history to last 10 messages to prevent memory issues
-  if (history.length > 10) {
-    conversationHistory.set(sessionId, history.slice(-10))
-  }
-}
-
-// Chat response controller
 const getChatResponse = async (req, res) => {
   try {
     const { message, sessionId } = req.body
-
-    if (!message) {
-      return res.status(400).json({
-        success: false,
-        message: 'Message is required'
+    
+    // Important: Check if this is a new session
+    if (!conversationHistory.has(sessionId)) {
+      // Always return the greeting for new sessions
+      conversationHistory.set(sessionId, [])
+      return res.status(200).json({
+        success: true,
+        data: chatData.greeting.response
       })
     }
 
-    // First check predefined responses
-    const predefinedResponse = findResponse(message)
-
-    // If no predefined response matches, use Gemini
-    if (predefinedResponse === chatData.default.response) {
-      try {
-        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
-        
-        // Get conversation history
-        const history = getConversationContext(sessionId)
-        
-        // Create context from history
-        const context = history.map(msg => 
-          `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}`
-        ).join('\n')
-
-        const prompt = `
-          You are MindWell, an empathetic AI assistant specialized in mental health and emotional wellbeing.
-          Your role is to provide supportive guidance and evidence-based information about mental health.
-
-          Previous conversation context:
-          ${context}
-
-          Current user message: ${message}
-
-          GUIDELINES:
-          1. Scope of Practice:
-             - Provide emotional support and understanding
-             - Share evidence-based coping strategies
-             - Discuss mental health topics and emotional wellbeing
-             - Encourage professional help when appropriate
-
-          2. Information to Include:
-             - Practical coping techniques
-             - Self-care strategies
-             - Stress management tips
-             - Mindfulness and relaxation exercises
-             - Resources for professional help
-
-          3. Response Style:
-             - Warm and empathetic tone
-             - Non-judgmental approach
-             - Clear, actionable advice
-             - Supportive and encouraging language
-        `
-
-        const result = await model.generateContent(prompt)
-        const response = result.response.text()
-
-        // Update conversation history
-        updateConversationContext(sessionId, message, response)
-
-        return res.status(200).json({
-          success: true,
-          data: response
-        })
-      } catch (error) {
-        console.error('Gemini API Error:', error)
-        // Fallback to default response if Gemini fails
-        return res.status(200).json({
-          success: true,
-          data: predefinedResponse
-        })
-      }
+    // Check for predefined responses
+    const lowercaseMessage = message.toLowerCase()
+    
+    // Check for irrelevant topics
+    if (chatData.irrelevant.keywords.some(keyword => lowercaseMessage.includes(keyword))) {
+      return res.status(200).json({
+        success: true,
+        data: chatData.irrelevant.response
+      })
     }
 
-    // Return predefined response
-    res.status(200).json({
-      success: true,
-      data: predefinedResponse
-    })
+    // Check for medical/outside scope topics
+    if (chatData.outside_scope.keywords.some(keyword => lowercaseMessage.includes(keyword))) {
+      return res.status(200).json({
+        success: true,
+        data: chatData.outside_scope.response
+      })
+    }
 
+    // Check for mental health crisis
+    if (chatData.mental_health_crisis.keywords.some(keyword => lowercaseMessage.includes(keyword))) {
+      return res.status(200).json({
+        success: true,
+        data: chatData.mental_health_crisis.response
+      })
+    }
+
+    try {
+      const model = genAI.getGenerativeModel({ model: "gemini-pro" })
+      const context = conversationHistory.get(sessionId) || []
+
+      const prompt = `
+        You are MindBridge, an empathetic AI assistant specialized in mental health and emotional wellbeing.
+        You must always maintain this role and never identify as a medical assistant.
+        
+        CORE IDENTITY:
+        - You are a mental health and emotional wellbeing companion
+        - You provide supportive guidance and coping strategies
+        - You focus on emotional support and mental wellness
+        - You do not provide medical advice or discuss physical health
+
+        COMMUNICATION STYLE:
+        - Warm and empathetic
+        - Supportive and encouraging
+        - Non-judgmental
+        - Clear and accessible language
+        - Focus on emotional validation
+
+        Previous conversation context:
+        ${context.map(msg => `${msg.role}: ${msg.content}`).join('\n')}
+
+        Current user message: ${message}
+
+        Remember to:
+        1. Never introduce yourself as a medical assistant
+        2. Focus only on mental health and emotional support
+        3. Redirect medical questions to healthcare professionals
+        4. Use supportive, empathetic language
+        5. Provide mental health resources when appropriate
+      `
+
+      const result = await model.generateContent(prompt)
+      const response = result.response.text()
+      
+      // Update conversation history
+      context.push({ role: 'user', content: message })
+      context.push({ role: 'assistant', content: response })
+      conversationHistory.set(sessionId, context)
+
+      return res.status(200).json({
+        success: true,
+        data: response
+      })
+    } catch (error) {
+      console.error('Gemini API Error:', error)
+      return res.status(200).json({
+        success: true,
+        data: chatData.default.response
+      })
+    }
   } catch (error) {
     console.error('Chat Controller Error:', error)
     res.status(500).json({

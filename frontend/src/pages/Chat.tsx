@@ -8,6 +8,8 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism'
+import MoodTracker from '@/components/MoodTracker'
+import CrisisResources from '@/components/CrisisResources'
 
 interface Message {
   role: 'user' | 'assistant'
@@ -77,19 +79,14 @@ const Chat = () => {
     setIsLoading(true)
 
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/chat`,
-        {
-          message: userMessage,
-          sessionId: sessionId
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          withCredentials: true // Important for CORS
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/chat`, {
+        message: userMessage,
+        sessionId: sessionId
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
         }
-      );
+      });
 
       if (response.data.success) {
         const newAssistantMessage: Message = {
@@ -100,13 +97,7 @@ const Chat = () => {
         setMessages(prev => [...prev, newAssistantMessage])
       }
     } catch (error) {
-      console.error('Error details:', {
-        error,
-        apiUrl: import.meta.env.VITE_API_URL,
-        message: error.message,
-        response: error.response
-      });
-      
+      console.error('Error sending message:', error)
       const errorMessage: Message = {
         role: 'assistant',
         content: 'Sorry, I encountered an error. Please try again.',
@@ -133,142 +124,155 @@ const Chat = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <main className="flex-grow">
-        <section className="py-4 sm:py-8 bg-white">
-          <div className="section-container px-4 sm:px-6">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
-              <div className="flex items-center gap-3">
-                <Button 
-                  variant="ghost" 
-                  size="icon"
-                  onClick={handleBackClick}
-                  className="hover:bg-gray-100"
-                >
-                  <ArrowLeft className="h-5 w-5" />
-                </Button>
-                <h1 className="text-2xl sm:text-3xl font-bold">Chat with MindBridge</h1>
-              </div>
-              
-              {messages.length > 0 && (
-                <Button
-                  onClick={() => {
-                    setMessages([])
-                    localStorage.removeItem('chatHistory')
-                  }}
-                  variant="outline"
-                  size="sm"
-                  className="text-sm"
-                >
-                  Clear Chat
-                </Button>
-              )}
+      <main className="flex-grow pt-20">
+        <div className="container mx-auto px-4 py-6">
+          {/* Header */}
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+            <div className="flex items-center gap-3">
+              <Button 
+                variant="ghost" 
+                size="icon"
+                onClick={handleBackClick}
+                className="hover:bg-gray-100"
+              >
+                <ArrowLeft className="h-5 w-5" />
+              </Button>
+              <h1 className="text-2xl sm:text-3xl font-bold">Chat with MindBridge</h1>
+            </div>
+            
+            {messages.length > 0 && (
+              <Button
+                onClick={() => {
+                  setMessages([])
+                  localStorage.removeItem('chatHistory')
+                }}
+                variant="outline"
+                size="sm"
+                className="text-sm mt-2 sm:mt-0"
+              >
+                Clear Chat
+              </Button>
+            )}
+          </div>
+
+          {/* Main Content */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            {/* Sidebar */}
+            <div className="lg:col-span-3 space-y-6">
+              <MoodTracker />
+              <CrisisResources />
             </div>
 
-            <div className="bg-gray-50 rounded-2xl shadow-lg">
-              <div className="h-[calc(100vh-250px)] sm:h-[600px] overflow-y-auto p-4">
-                <div className="messages-container flex-grow overflow-y-auto space-y-3 sm:space-y-4 px-2">
-                  {messages.length === 0 ? (
-                    <div className="flex-grow flex flex-col justify-center items-center text-center px-2 sm:px-4">
-                      <div className="w-12 h-12 sm:w-16 sm:h-16 bg-mindwell-light rounded-full flex items-center justify-center mb-3 sm:mb-4">
-                        <Brain className="w-8 h-8 sm:w-10 sm:h-10 text-mindwell" />
+            {/* Chat Area */}
+            <div className="lg:col-span-9">
+              <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+                {/* Messages Container */}
+                <div className="h-[calc(100vh-280px)] overflow-y-auto p-4">
+                  <div className="space-y-4">
+                    {messages.length === 0 ? (
+                      <div className="flex-grow flex flex-col justify-center items-center text-center px-2 sm:px-4">
+                        <div className="w-12 h-12 sm:w-16 sm:h-16 bg-mindwell-light rounded-full flex items-center justify-center mb-3 sm:mb-4">
+                          <Brain className="w-8 h-8 sm:w-10 sm:h-10 text-mindwell" />
+                        </div>
+                        <h3 className="text-lg sm:text-xl font-semibold mb-2">Your Mental Wellbeing Companion</h3>
+                        <p className="text-gray-600 text-sm sm:text-base mb-4">
+                          Share your thoughts and feelings in a safe, judgment-free space. 
+                          I'm here to listen and provide supportive guidance.
+                        </p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 w-full">
+                          {exampleQuestions.map((question, index) => (
+                            <button
+                              key={index}
+                              onClick={() => setInputValue(question)}
+                              className="text-left text-xs sm:text-sm bg-white border border-gray-200 rounded-lg p-2 hover:border-mindwell transition-colors"
+                            >
+                              {question}
+                            </button>
+                          ))}
+                        </div>
                       </div>
-                      <h3 className="text-lg sm:text-xl font-semibold mb-2">Your Mental Wellbeing Companion</h3>
-                      <p className="text-gray-600 text-sm sm:text-base mb-4">
-                        Share your thoughts and feelings in a safe, judgment-free space. 
-                        I'm here to listen and provide supportive guidance.
-                      </p>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 w-full">
-                        {exampleQuestions.map((question, index) => (
-                          <button
-                            key={index}
-                            onClick={() => setInputValue(question)}
-                            className="text-left text-xs sm:text-sm bg-white border border-gray-200 rounded-lg p-2 hover:border-mindwell transition-colors"
-                          >
-                            {question}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  ) : (
-                    messages.map((message, index) => (
-                      <div
-                        key={index}
-                        className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                      >
+                    ) : (
+                      messages.map((message, index) => (
                         <div
-                          className={`max-w-[85%] sm:max-w-[80%] rounded-2xl p-3 sm:p-4 text-sm sm:text-base ${
-                            message.role === 'user'
-                              ? 'bg-mindwell text-white'
-                              : 'bg-gray-100 text-gray-800'
-                          }`}
+                          key={index}
+                          className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
                         >
-                          <ReactMarkdown
-                            remarkPlugins={[remarkGfm]}
-                            components={{
-                              code({ node, className, children, ...props }) {
-                                const match = /language-(\w+)/.exec(className || '')
-                                return match ? (
-                                  <SyntaxHighlighter
-                                    style={vscDarkPlus}
-                                    language={match[1]}
-                                    PreTag="div"
-                                    {...props}
-                                  >
-                                    {String(children).replace(/\n$/, '')}
-                                  </SyntaxHighlighter>
-                                ) : (
-                                  <code className={className} {...props}>
-                                    {children}
-                                  </code>
-                                )
-                              }
-                            }}
+                          <div
+                            className={`max-w-[85%] sm:max-w-[80%] rounded-2xl p-3 sm:p-4 text-sm sm:text-base ${
+                              message.role === 'user'
+                                ? 'bg-mindwell text-white'
+                                : 'bg-gray-100 text-gray-800'
+                            }`}
                           >
-                            {message.content}
-                          </ReactMarkdown>
-                          <div className="text-xs opacity-70 mt-1">
-                            {new Date(message.timestamp).toLocaleTimeString()}
+                            <ReactMarkdown
+                              remarkPlugins={[remarkGfm]}
+                              components={{
+                                code({ node, className, children, ...props }) {
+                                  const match = /language-(\w+)/.exec(className || '')
+                                  return match ? (
+                                    <SyntaxHighlighter
+                                      style={vscDarkPlus}
+                                      language={match[1]}
+                                      PreTag="div"
+                                      {...props}
+                                    >
+                                      {String(children).replace(/\n$/, '')}
+                                    </SyntaxHighlighter>
+                                  ) : (
+                                    <code className={className} {...props}>
+                                      {children}
+                                    </code>
+                                  )
+                                }
+                              }}
+                            >
+                              {message.content}
+                            </ReactMarkdown>
+                            <div className="text-xs opacity-70 mt-1">
+                              {new Date(message.timestamp).toLocaleTimeString()}
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                    {isLoading && (
+                      <div className="flex justify-start">
+                        <div className="max-w-[85%] sm:max-w-[80%] rounded-2xl p-3 sm:p-4 text-sm sm:text-base bg-gray-100 text-gray-800">
+                          <div className="flex space-x-2">
+                            <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                            <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                            <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
                           </div>
                         </div>
                       </div>
-                    ))
-                  )}
-                  {isLoading && (
-                    <div className="flex justify-start">
-                      <div className="max-w-[85%] sm:max-w-[80%] rounded-2xl p-3 sm:p-4 text-sm sm:text-base bg-gray-100 text-gray-800">
-                        <div className="flex space-x-2">
-                          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                  <div ref={messagesEndRef} />
+                    )}
+                    <div ref={messagesEndRef} />
+                  </div>
                 </div>
-              </div>
 
-              <div className="border-t bg-white p-4 rounded-b-2xl">
-                <form onSubmit={handleSubmit} className="flex gap-2">
-                  <input
-                    type="text"
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    placeholder="Share your thoughts or ask for support..."
-                    className="flex-grow px-4 py-2 rounded-full border focus:ring-2 focus:ring-mindwell/50"
-                  />
-                  <Button 
-                    type="submit" 
-                    className="rounded-full aspect-square p-2 bg-mindwell hover:bg-mindwell/90"
-                    disabled={isLoading}
-                  >
-                    <Send className="h-5 w-5" />
-                  </Button>
-                </form>
+                {/* Input Area */}
+                <div className="border-t bg-white p-4">
+                  <form onSubmit={handleSubmit} className="flex gap-2">
+                    <input
+                      type="text"
+                      value={inputValue}
+                      onChange={(e) => setInputValue(e.target.value)}
+                      placeholder="Share your thoughts or ask for support..."
+                      className="flex-grow px-4 py-2 rounded-full border focus:ring-2 focus:ring-mindwell/50"
+                    />
+                    <Button 
+                      type="submit" 
+                      className="rounded-full aspect-square p-2 bg-mindwell hover:bg-mindwell/90"
+                      disabled={isLoading}
+                    >
+                      <Send className="h-5 w-5" />
+                    </Button>
+                  </form>
+                </div>
               </div>
             </div>
           </div>
-        </section>
+        </div>
       </main>
       <Footer />
     </div>

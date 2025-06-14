@@ -167,6 +167,35 @@
   .animate-float {
     animation: float 4s ease-in-out infinite;
   }
+
+  .bg-mindwell-light {
+    @apply bg-blue-50;
+  }
+
+  .animate-pulse-gentle {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.chat-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@screen lg {
+  .chat-layout {
+    grid-template-columns: 18rem 1fr;
+  }
 }
 
 @layer base {
