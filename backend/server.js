@@ -10,9 +10,8 @@ const port = process.env.PORT || 4000
 // Middleware
 app.use(express.json())
 app.use(cors({
-  origin: [
-    'https://your-medihelp-frontend.onrender.com'],
-  methods: ['GET', 'POST', 'OPTIONS'],
+  origin: process.env.FRONTEND_URL || "https://your-medihelp-frontend.onrender.com",
+  methods: ['GET', 'POST'],
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization']
 }))
