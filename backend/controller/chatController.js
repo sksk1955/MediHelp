@@ -7,6 +7,19 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
 // Store conversation history
 const conversationHistory = new Map()
 
+// Add this function for debugging
+async function logAvailableModels() {
+  try {
+    const models = await genAI.listModels();
+    console.log("Available Gemini models:", models);
+  } catch (err) {
+    console.error("Error listing Gemini models:", err);
+  }
+}
+
+// Call this once at server start (not on every request)
+logAvailableModels();
+
 const getChatResponse = async (req, res) => {
   try {
     const { message, sessionId } = req.body
@@ -51,7 +64,7 @@ const getChatResponse = async (req, res) => {
     }
 
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-pro" })
+      const model = genAI.getGenerativeModel({ model: "models/gemini-1.0-pro-latest" })
       const context = conversationHistory.get(sessionId) || []
 
       const prompt = `
