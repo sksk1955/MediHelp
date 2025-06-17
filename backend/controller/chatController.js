@@ -51,7 +51,7 @@ const getChatResponse = async (req, res) => {
     }
 
     try {
-      const model = genAI.getGenerativeModel({ model: "models/gemini-1.0-pro-latest" })
+      const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
       const context = conversationHistory.get(sessionId) || []
 
       const prompt = `

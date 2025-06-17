@@ -122,6 +122,14 @@ const Chat = () => {
     navigate('/');
   };
 
+  // Clear chat history and sessionId on mount
+  useEffect(() => {
+    setMessages([])
+    localStorage.removeItem('chatHistory')
+    // Optionally, clear sessionId if you want a new session each time:
+    // localStorage.removeItem('chatSessionId')
+  }, [])
+
   return (
     <div className="min-h-screen flex flex-col">
       <main className="flex-grow pt-20">
