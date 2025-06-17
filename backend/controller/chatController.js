@@ -10,38 +10,29 @@ const conversationHistory = new Map()
 const getChatResponse = async (req, res) => {
   try {
     const { message, sessionId } = req.body
-    
-    // Important: Check if this is a new session
-    if (!conversationHistory.has(sessionId)) {
-      // Always return the greeting for new sessions
-      conversationHistory.set(sessionId, [])
-      return res.status(200).json({
-        success: true,
-        data: chatData.greeting.response
-      })
+    if (!message || !sessionId) {
+      return res.status(400).json({ success: false, message: 'Missing message or sessionId' })
     }
 
-    // Check for predefined responses
     const lowercaseMessage = message.toLowerCase()
-    
-    // Check for irrelevant topics
-    if (chatData.irrelevant.keywords.some(keyword => lowercaseMessage.includes(keyword))) {
-      return res.status(200).json({
-        success: true,
-        data: chatData.irrelevant.response
-      })
-    }
 
-    // Check for medical/outside scope topics
-    if (chatData.outside_scope.keywords.some(keyword => lowercaseMessage.includes(keyword))) {
+    // Defensive checks for chatData keys
+    if (
+      chatData.outside_scope &&
+      Array.isArray(chatData.outside_scope.keywords) &&
+      chatData.outside_scope.keywords.some(keyword => lowercaseMessage.includes(keyword))
+    ) {
       return res.status(200).json({
         success: true,
         data: chatData.outside_scope.response
       })
     }
 
-    // Check for mental health crisis
-    if (chatData.mental_health_crisis.keywords.some(keyword => lowercaseMessage.includes(keyword))) {
+    if (
+      chatData.mental_health_crisis &&
+      Array.isArray(chatData.mental_health_crisis.keywords) &&
+      chatData.mental_health_crisis.keywords.some(keyword => lowercaseMessage.includes(keyword))
+    ) {
       return res.status(200).json({
         success: true,
         data: chatData.mental_health_crisis.response
@@ -84,7 +75,7 @@ const getChatResponse = async (req, res) => {
 
       const result = await model.generateContent(prompt)
       const response = result.response.text()
-      
+
       // Update conversation history
       context.push({ role: 'user', content: message })
       context.push({ role: 'assistant', content: response })
