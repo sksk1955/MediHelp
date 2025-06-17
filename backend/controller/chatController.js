@@ -39,6 +39,17 @@ const getChatResponse = async (req, res) => {
       })
     }
 
+    if (
+      chatData.greeting &&
+      Array.isArray(chatData.greeting.keywords) &&
+      chatData.greeting.keywords.some(keyword => lowercaseMessage.includes(keyword))
+    ) {
+      return res.status(200).json({
+        success: true,
+        data: chatData.greeting.response
+      })
+    }
+
     try {
       const model = genAI.getGenerativeModel({ model: "gemini-pro" })
       const context = conversationHistory.get(sessionId) || []
