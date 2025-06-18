@@ -3,13 +3,14 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import Footer from '@/components/layout/Footer'
 import { Button } from '@/components/ui/button'
-import { Send, ArrowLeft, Brain } from 'lucide-react'
+import { Send, ArrowLeft, Brain, LogOut } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import MoodTracker from '@/components/MoodTracker'
 import CrisisResources from '@/components/CrisisResources'
+import { useAuth } from "@clerk/clerk-react";
 
 interface Message {
   role: 'user' | 'assistant'
@@ -23,6 +24,7 @@ const Chat = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [sessionId, setSessionId] = useState<string>('')
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const { signOut } = useAuth();
   const navigate = useNavigate()
 
   // Generate or load session ID
@@ -122,6 +124,11 @@ const Chat = () => {
     navigate('/');
   };
 
+  const handleLogout = async () => {
+    await signOut();
+    navigate('/');
+  };
+
   // Clear chat history and sessionId on mount
   useEffect(() => {
     setMessages([])
@@ -148,19 +155,30 @@ const Chat = () => {
               <h1 className="text-2xl sm:text-3xl font-bold">Chat with MindBridge</h1>
             </div>
             
-            {messages.length > 0 && (
+            <div className="flex items-center gap-2 mt-2 sm:mt-0">
+              {messages.length > 0 && (
+                <Button
+                  onClick={() => {
+                    setMessages([]);
+                    localStorage.removeItem('chatHistory');
+                  }}
+                  variant="outline"
+                  size="sm"
+                  className="text-sm"
+                >
+                  Clear Chat
+                </Button>
+              )}
               <Button
-                onClick={() => {
-                  setMessages([])
-                  localStorage.removeItem('chatHistory')
-                }}
+                onClick={handleLogout}
                 variant="outline"
                 size="sm"
-                className="text-sm mt-2 sm:mt-0"
+                className="text-sm flex items-center gap-2"
               >
-                Clear Chat
+                <LogOut className="h-4 w-4" />
+                Logout
               </Button>
-            )}
+            </div>
           </div>
 
           {/* Main Content */}

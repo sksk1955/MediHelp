@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu } from "lucide-react";
+import { Menu, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@clerk/clerk-react";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const { signOut, isSignedIn } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,12 +30,13 @@ const Navbar = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  const navigate = useNavigate();
-  
-  // Function to handle button click
   const handleChatNowClick = () => {
-    // Navigate to the chat page
     navigate("/chat");
+  };
+
+  const handleLogout = async () => {
+    await signOut();
+    navigate("/");
   };
 
   return (
@@ -46,15 +50,13 @@ const Navbar = () => {
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <a href="/" className="flex items-center">
-              <span className="text-mindwell font-bold text-2xl">
-                Mind
-              </span>
+              <span className="text-mindwell font-bold text-2xl">Mind</span>
               <span className="text-mindwell font-medium">Bridge</span>
             </a>
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
+          <nav className="hidden md:flex items-center space-x-4">
             <a href="#about" className="text-gray-600 hover:text-medical transition duration-200">
               About
             </a>
@@ -64,7 +66,25 @@ const Navbar = () => {
             <a href="#faq" className="text-gray-600 hover:text-medical transition duration-200">
               FAQs
             </a>
-            <Button onClick={handleChatNowClick} className="btn-primary">Chat Now</Button>
+            {isSignedIn ? (
+              <div className="flex items-center gap-2">
+                <Button onClick={handleChatNowClick} className="btn-primary">
+                  Chat Now
+                </Button>
+                <Button 
+                  onClick={handleLogout}
+                  variant="outline"
+                  className="flex items-center gap-2"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Logout
+                </Button>
+              </div>
+            ) : (
+              <Button onClick={handleChatNowClick} className="btn-primary">
+                Get Started
+              </Button>
+            )}
           </nav>
 
           {/* Mobile Menu Button */}
@@ -90,7 +110,25 @@ const Navbar = () => {
             <a href="#faq" className="text-gray-600 hover:text-medical transition duration-200">
               FAQs
             </a>
-            <Button className="btn-primary w-full">Chat Now</Button>
+            {isSignedIn ? (
+              <>
+                <Button onClick={handleChatNowClick} className="btn-primary w-full">
+                  Chat Now
+                </Button>
+                <Button 
+                  onClick={handleLogout}
+                  variant="outline"
+                  className="w-full flex items-center justify-center gap-2"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <Button onClick={handleChatNowClick} className="btn-primary w-full">
+                Get Started
+              </Button>
+            )}
           </nav>
         )}
       </div>
